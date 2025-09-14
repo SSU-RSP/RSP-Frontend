@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'features/MyPage/mypage_screen.dart';
+import 'features/Home/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -10,12 +11,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 1; // 기본은 메인 탭
+  int _selectedIndex = 1; // 기본은 홈탭
 
   final List<Widget> _pages = [
     const ListPage(), // 목록
-    const HomePage(), // 메인 (검색)
-    const MyPageScreen(userName: "게스트"), // ✅ 임시로 "게스트" 이름 전달
+    const HomePage(key: PageStorageKey("home")),
+    const MyPageScreen(userName: "게스트", key: PageStorageKey("mypage")),
   ];
 
   void _onItemTapped(int index) {
@@ -28,8 +29,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      child: _pages[_selectedIndex],
+        duration: const Duration(milliseconds: 300),
+        child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
@@ -43,36 +44,17 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.house_fill), label: "홈"),
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.person), label: "마이"),
         ],
-
       ),
     );
   }
 }
 
-/// 임시 페이지들 (세부 기능은 각자 구현 예정)
+/// 임시 페이지: 목록만 남겨둠
 class ListPage extends StatelessWidget {
   const ListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Center(child: Text("목록 페이지"));
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("메인 (검색) 페이지"));
-  }
-}
-
-class MyPage extends StatelessWidget {
-  const MyPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("마이 페이지"));
   }
 }
