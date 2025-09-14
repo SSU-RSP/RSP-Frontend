@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'features/MyPage/mypage_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const ListPage(), // 목록
     const HomePage(), // 메인 (검색)
-    const MyPage(),   // 마이
+    const MyPageScreen(userName: "게스트"), // ✅ 임시로 "게스트" 이름 전달
   ];
 
   void _onItemTapped(int index) {
@@ -39,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
         showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.list_bullet), label: "목록"),
-          BottomNavigationBarItem(icon: Icon(CupertinoIcons.house_fill), label: "메인"),
+          BottomNavigationBarItem(icon: Icon(CupertinoIcons.house_fill), label: "홈"),
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.person), label: "마이"),
         ],
 
