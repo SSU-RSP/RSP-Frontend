@@ -1,2 +1,0 @@
-# RSP-Frontend
-RSP-Frontend
