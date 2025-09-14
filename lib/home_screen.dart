@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -25,27 +26,23 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: _pages[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: const Color(0xFF4A7DFF),
+        selectedItemColor: const Color(0xFF6593FF),
         unselectedItemColor: Colors.black54,
         showUnselectedLabels: true,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "목록",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "메인",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "마이",
-          ),
+          BottomNavigationBarItem(icon: Icon(CupertinoIcons.list_bullet), label: "목록"),
+          BottomNavigationBarItem(icon: Icon(CupertinoIcons.house_fill), label: "메인"),
+          BottomNavigationBarItem(icon: Icon(CupertinoIcons.person), label: "마이"),
         ],
+
       ),
     );
   }

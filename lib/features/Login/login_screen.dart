@@ -63,10 +63,15 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       // TODO : 로그인 검증/서비스 연동 부분
                       // 현재는 바로 이동
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MainScreen()),
-                      );
+                      Navigator.of(context).pushReplacement(PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => const MainScreen(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                      ));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A7DFF),
