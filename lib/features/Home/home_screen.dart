@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'search_result_screen.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -11,6 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   /// 검색 실행 함수
   void _executeSearch() {
@@ -23,32 +23,30 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // TODO: 실제 API 연동 자리
-    // 지금은 임시 데이터로 예시 보여줌
     final dummyResults = [
       PaperItem(
         title: '"$query"와 관련된 딥러닝 연구',
         authors: "Research Team A et al.",
         conference: "ICML",
         year: 2024,
-        summary: "이 논문은 $query 에 대한 최신 연구를 다룹니다. "
-            "혁신적인 접근으로 기존 한계를 극복하고 성능을 향상시켰습니다.",
+        summary:
+        "이 논문은 $query 에 대한 최신 연구를 다룹니다. 혁신적인 접근으로 기존 한계를 극복하고 성능을 향상시켰습니다.",
       ),
       PaperItem(
         title: "$query 기반 새로운 아키텍처 설계",
         authors: "Research Team B et al.",
         conference: "NeurIPS",
         year: 2023,
-        summary: "$query 를 활용한 아키텍처의 최적화 연구입니다. "
-            "실험 결과 기존 모델 대비 성능 향상을 확인했습니다.",
+        summary:
+        "$query 를 활용한 아키텍처의 최적화 연구입니다. 실험 결과 기존 모델 대비 성능 향상을 확인했습니다.",
       ),
       PaperItem(
         title: "$query 의 실제 응용 사례 연구",
         authors: "Industry Team C et al.",
         conference: "ICLR",
         year: 2024,
-        summary: "$query 기술을 실제 산업 현장에 적용한 사례를 분석하고, "
-            "안정성을 평가한 연구입니다.",
+        summary:
+        "$query 기술을 실제 산업 현장에 적용한 사례를 분석하고, 안정성을 평가한 연구입니다.",
       ),
     ];
 
@@ -60,6 +58,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,15 +126,24 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       child: TextField(
                         controller: _searchController,
+                        focusNode: _focusNode,
                         decoration: const InputDecoration(
                           hintText: "논문 검색 키워드 입력 (예: Transformer)",
                           border: InputBorder.none,
                         ),
+                        onSubmitted: (_) {
+                          FocusScope.of(context).unfocus();
+                          _executeSearch();
+                        },
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.search, color: Color(0xFF6593FF)),
-                      onPressed: _executeSearch,
+                      icon:
+                      const Icon(Icons.search, color: Color(0xFF6593FF)),
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        _executeSearch();
+                      },
                     ),
                   ],
                 ),
@@ -142,7 +155,10 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _executeSearch,
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    _executeSearch();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6593FF),
                     shape: RoundedRectangleBorder(
@@ -226,20 +242,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 애플스러운 키워드 Chip
-  static Widget _buildKeywordChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F6FA),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Colors.black87,
+  // 인기 검색어 칩 위젯
+  Widget _buildKeywordChip(String keyword) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _searchController.text = keyword;
+        });
+        FocusScope.of(context).requestFocus(_focusNode);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F6FA),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          keyword,
+          style: const TextStyle(fontSize: 14, color: Colors.black87),
         ),
       ),
     );
