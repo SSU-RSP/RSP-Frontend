@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../List/list_screen.dart';
 import 'search_result_screen.dart';
+import '../../models/paper_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,14 +25,15 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    final dummyResults = [
+    // ✅ 더미 데이터
+    final results = [
       PaperItem(
-        title: '"$query"와 관련된 딥러닝 연구',
+        title: "$query 관련 최신 연구",
         authors: "Research Team A et al.",
         conference: "ICML",
         year: 2024,
         summary:
-        "이 논문은 $query 에 대한 최신 연구를 다룹니다. 혁신적인 접근으로 기존 한계를 극복하고 성능을 향상시켰습니다.",
+        "$query 에 대한 최신 연구를 다룹니다. 기존 한계를 극복하고 성능을 향상시켰습니다.",
       ),
       PaperItem(
         title: "$query 기반 새로운 아키텍처 설계",
@@ -38,81 +41,81 @@ class _HomePageState extends State<HomePage> {
         conference: "NeurIPS",
         year: 2023,
         summary:
-        "$query 를 활용한 아키텍처의 최적화 연구입니다. 실험 결과 기존 모델 대비 성능 향상을 확인했습니다.",
+        "$query 를 활용한 아키텍처 최적화 연구입니다. 실험 결과 기존 대비 성능이 향상되었습니다.",
       ),
       PaperItem(
-        title: "$query 의 실제 응용 사례 연구",
+        title: "$query 의 실제 응용 사례",
         authors: "Industry Team C et al.",
         conference: "ICLR",
         year: 2024,
-        summary:
-        "$query 기술을 실제 산업 현장에 적용한 사례를 분석하고, 안정성을 평가한 연구입니다.",
+        summary: "$query 기술의 실제 산업 적용 사례를 분석한 연구입니다.",
       ),
     ];
 
+    // 검색 결과 화면으로 이동
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => SearchResultScreen(query: query, results: dummyResults),
+        builder: (_) => SearchResultScreen(
+          query: query,
+          results: results,
+        ),
+      ),
+    );
+  }
+
+  // 인기 검색어 Chip 위젯
+  Widget _buildKeywordChip(String keyword) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _searchController.text = keyword;
+        });
+        FocusScope.of(context).requestFocus(_focusNode);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F6FA),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          keyword,
+          style: const TextStyle(fontSize: 14, color: Colors.black87),
+        ),
       ),
     );
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              /// 임시 아이콘 (추후 이미지 교체)
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF6593FF), Color(0xFF9BBEFF)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: const Icon(
-                  Icons.auto_awesome,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              /// 타이틀
-              const Text(
-                "논문 검색",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                "키워드로 관련 논문을 찾아보세요",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                ),
-              ),
-
               const SizedBox(height: 24),
+
+              /// 상단 아이콘 + 타이틀
+              Column(
+                children: const [
+                  Icon(Icons.auto_awesome, size: 64, color: Color(0xFF6593FF)),
+                  SizedBox(height: 16),
+                  Text(
+                    "논문 검색",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "키워드로 관련 논문을 찾아보세요",
+                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 32),
 
               /// 검색 입력창
               Container(
@@ -131,19 +134,11 @@ class _HomePageState extends State<HomePage> {
                           hintText: "논문 검색 키워드 입력 (예: Transformer)",
                           border: InputBorder.none,
                         ),
-                        onSubmitted: (_) {
-                          FocusScope.of(context).unfocus();
-                          _executeSearch();
-                        },
                       ),
                     ),
                     IconButton(
-                      icon:
-                      const Icon(Icons.search, color: Color(0xFF6593FF)),
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        _executeSearch();
-                      },
+                      icon: const Icon(Icons.search, color: Color(0xFF6593FF)),
+                      onPressed: _executeSearch,
                     ),
                   ],
                 ),
@@ -155,10 +150,7 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    _executeSearch();
-                  },
+                  onPressed: _executeSearch,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6593FF),
                     shape: RoundedRectangleBorder(
@@ -211,55 +203,16 @@ class _HomePageState extends State<HomePage> {
                   color: const Color(0xFFF5F6FA),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "검색 팁",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
+                child: const Text(
+                  "검색 팁\n"
                       "• 구체적인 기술명이나 방법론으로 검색하면 더 정확한 결과를 얻을 수 있습니다\n"
-                          "• 영어 키워드를 사용하면 더 많은 논문을 찾을 수 있습니다\n"
-                          "• 여러 키워드를 조합해서 검색해보세요",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black54,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
+                      "• 영어 키워드를 사용하면 더 많은 논문을 찾을 수 있습니다\n"
+                      "• 여러 키워드를 조합해서 검색해보세요",
+                  style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  // 인기 검색어 칩 위젯
-  Widget _buildKeywordChip(String keyword) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _searchController.text = keyword;
-        });
-        FocusScope.of(context).requestFocus(_focusNode);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5F6FA),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          keyword,
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
         ),
       ),
     );

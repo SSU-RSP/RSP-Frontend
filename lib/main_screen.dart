@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'features/MyPage/mypage_screen.dart';
 import 'features/Home/home_screen.dart';
+import 'features/List/list_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 1; // 기본은 홈탭
 
   final List<Widget> _pages = [
-    const ListPage(), // 목록
+    const ListScreen(),
     const HomePage(key: PageStorageKey("home")),
     const MyPageScreen(userName: "게스트", key: PageStorageKey("mypage")),
   ];
@@ -46,15 +47,5 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
-  }
-}
-
-/// 임시 페이지: 목록만 남겨둠
-class ListPage extends StatelessWidget {
-  const ListPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("목록 페이지"));
   }
 }
