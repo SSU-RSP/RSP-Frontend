@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../List/list_screen.dart';
 import 'search_result_screen.dart';
 import '../../models/paper_item.dart';
 
