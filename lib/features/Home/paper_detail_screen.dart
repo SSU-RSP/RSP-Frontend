@@ -15,10 +15,10 @@ class PaperDetailScreen extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // 상단 AppBar + 그라데이션
+          // 상단 AppBar + 오디오 플레이어
           SliverAppBar(
             pinned: true,
-            expandedHeight: 250,
+            expandedHeight: 400,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: const BoxDecoration(
@@ -28,64 +28,14 @@ class PaperDetailScreen extends StatelessWidget {
                     end: Alignment.bottomRight,
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // 논문 아이콘
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(Icons.description,
-                          color: Colors.white, size: 50),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // 제목
-                    Text(
-                      paper.title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-
-                    // 저자 + 컨퍼런스
-                    Text(
-                      "${paper.authors} · ${paper.conference} ${paper.year}",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.white70,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-
-                    // 🔹 재생 버튼
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(20),
-                        backgroundColor: Colors.white,
-                        shadowColor: Colors.black26,
-                        elevation: 6,
-                      ),
-                      child: const Icon(Icons.play_arrow,
-                          color: Color(0xFF6593FF), size: 36),
-                    ),
-                  ],
+                child: SafeArea(
+                  child: PaperAudioPlayer(paper: paper),
                 ),
               ),
             ),
           ),
 
-          // 본문 (카드 스타일)
+          // 🔹 본문 (카드 스타일)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -97,12 +47,14 @@ class PaperDetailScreen extends StatelessWidget {
                     child: PaperSummarySection(summary: paper.summary),
                   ),
                   const SizedBox(height: 16),
+
                   _buildSectionCard(
                     context,
                     title: "목차",
                     child: const PaperTocSection(),
                   ),
                   const SizedBox(height: 16),
+
                   _buildSectionCard(
                     context,
                     title: "수식·그림·표 해석",
@@ -117,7 +69,7 @@ class PaperDetailScreen extends StatelessWidget {
     );
   }
 
-  // 카드 스타일 공통 위젯
+  // 🔹 카드 스타일 공통 위젯
   Widget _buildSectionCard(BuildContext context,
       {required String title, required Widget child}) {
     return Container(
