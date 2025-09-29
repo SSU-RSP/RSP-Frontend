@@ -5,7 +5,7 @@ import 'paper_detail_screen.dart';
 
 class SearchResultScreen extends StatelessWidget {
   final String query;
-  final List<PaperItem> results; // ✅ 추가
+  final List<PaperItem> results;
 
   const SearchResultScreen({
     super.key,
@@ -38,7 +38,10 @@ class SearchResultScreen extends StatelessWidget {
                 ),
               );
             },
-            child: PaperCard(paper: paper), // ✅ 공통 카드 사용
+            child: PaperCard(
+                paper: paper,
+                showDate: false,
+            ),
           );
         },
       ),
