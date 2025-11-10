@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rsp_frontend/main_screen.dart';
+import 'auth_login_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -61,17 +61,11 @@ class LoginScreen extends StatelessWidget {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO : 로그인 검증/서비스 연동 부분
-                      // 현재는 바로 이동
-                      Navigator.of(context).pushReplacement(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => const MainScreen(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                      ));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const AuthLoginScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6593FF),
