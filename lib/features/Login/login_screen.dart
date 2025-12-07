@@ -15,11 +15,11 @@ class LoginScreen extends StatelessWidget {
             children: [
               /// 메인 로고
               Image.asset(
-                'assets/MainLogo.png',
-                width: 160,
-                height: 160,
+                'assets/Character.png',
+                width: 220,
+                height: 220,
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 24),
 
               /// 앱 타이틀
               const Text(
