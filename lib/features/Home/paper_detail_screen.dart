@@ -58,7 +58,11 @@ class PaperDetailScreen extends StatelessWidget {
                   _buildSectionCard(
                     context,
                     title: "수식·그림·표 해석",
-                    child: const PaperFigureSection(),
+                    child: PaperFigureSection(
+                      equations: paper.equations,
+                      tables: paper.tables,
+                      figures: paper.figures,
+                    ),
                   ),
                 ],
               ),

@@ -16,16 +16,16 @@ class LoginScreen extends StatelessWidget {
               /// 메인 로고
               Image.asset(
                 'assets/Character.png',
-                width: 220,
-                height: 220,
+                width: 300,
+                height: 300,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 5),
 
               /// 앱 타이틀
               const Text(
                 "RSP",
                 style: TextStyle(
-                  fontSize: 33,
+                  fontSize: 40,
                   fontWeight: FontWeight.bold,
                   height: 1.0, // 라인 높이 줄여서 여백 최소화
                 ),

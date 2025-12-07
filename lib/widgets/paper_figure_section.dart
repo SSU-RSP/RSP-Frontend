@@ -1,22 +1,76 @@
 // 수식/그림/표 위젯
 import 'package:flutter/material.dart';
+import '../models/paper_item.dart';
 
 class PaperFigureSection extends StatelessWidget {
-  const PaperFigureSection({super.key});
+  final List<FigureItem>? equations;
+  final List<FigureItem>? tables;
+  final List<FigureItem>? figures;
+
+  const PaperFigureSection({
+    super.key,
+    this.equations,
+    this.tables,
+    this.figures,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // TODO 실제 데이터 연동 전에는 더미로 2~3개 보여주기
-    final dummyFigures = [
-      "그림 1. 모델 구조 개요",
-      "표 1. 성능 비교 결과",
-      "수식 1. 손실 함수 정의",
-    ];
+    final allItems = <Map<String, dynamic>>[];
+
+    // 수식 추가
+    if (equations != null) {
+      for (var i = 0; i < equations!.length; i++) {
+        allItems.add({
+          'type': '수식',
+          'index': i + 1,
+          'item': equations![i],
+        });
+      }
+    }
+
+    // 테이블 추가
+    if (tables != null) {
+      for (var i = 0; i < tables!.length; i++) {
+        allItems.add({
+          'type': '표',
+          'index': i + 1,
+          'item': tables![i],
+        });
+      }
+    }
+
+    // 그림 추가
+    if (figures != null) {
+      for (var i = 0; i < figures!.length; i++) {
+        allItems.add({
+          'type': '그림',
+          'index': i + 1,
+          'item': figures![i],
+        });
+      }
+    }
+
+    if (allItems.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            "수식·그림·표 정보가 없습니다.",
+            style: TextStyle(color: Colors.black54),
+          ),
+        ),
+      );
+    }
 
     return Column(
-      children: dummyFigures.map((caption) {
+      children: allItems.map((data) {
+        final type = data['type'] as String;
+        final index = data['index'] as int;
+        final item = data['item'] as FigureItem;
+
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
+          margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: const Color(0xFFF8F9FB),
@@ -26,20 +80,64 @@ class PaperFigureSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 타입 라벨
               Container(
-                height: 120,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xFF6593FF),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Center(
-                  child: Icon(Icons.image, size: 40, color: Colors.black45),
+                child: Text(
+                  "$type $index",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
+
+              // 이미지
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  item.imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.broken_image, size: 40, color: Colors.black45),
+                            SizedBox(height: 8),
+                            Text(
+                              "이미지를 불러올 수 없습니다",
+                              style: TextStyle(fontSize: 12, color: Colors.black45),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // 설명
               Text(
-                caption,
-                style: const TextStyle(fontSize: 13, color: Colors.black87),
+                item.description,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.black87,
+                  height: 1.5,
+                ),
               ),
             ],
           ),

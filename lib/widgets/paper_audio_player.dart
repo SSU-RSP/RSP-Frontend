@@ -7,6 +7,81 @@ class PaperAudioPlayer extends StatelessWidget {
 
   const PaperAudioPlayer({super.key, required this.paper});
 
+  void _showPodcastScript(BuildContext context, String script) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 핸들 바
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+
+              // 제목
+              Row(
+                children: const [
+                  Icon(Icons.mic, color: Color(0xFF6593FF)),
+                  SizedBox(width: 8),
+                  Text(
+                    "팟캐스트 스크립트",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "※ 타입캐스트 API 연동 전 더미 스크립트입니다",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black45,
+                ),
+              ),
+              const Divider(height: 24),
+
+              // 스크립트 내용
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Text(
+                    script,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      height: 1.6,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -55,7 +130,13 @@ class PaperAudioPlayer extends StatelessWidget {
         // 재생 버튼
         ElevatedButton(
           onPressed: () {
-            // TODO: 오디오 API 연동
+            if (paper.podcastScript != null) {
+              _showPodcastScript(context, paper.podcastScript!);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("팟캐스트 스크립트가 없습니다.")),
+              );
+            }
           },
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
