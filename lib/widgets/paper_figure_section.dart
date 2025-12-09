@@ -14,6 +14,38 @@ class PaperFigureSection extends StatelessWidget {
     this.figures,
   });
 
+  void _showImageDialog(BuildContext context, String imageUrl, String title) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.black,
+        insetPadding: EdgeInsets.zero,
+        child: Stack(
+          children: [
+            // 이미지만 크게 표시
+            Center(
+              child: InteractiveViewer(
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            // 닫기 버튼
+            Positioned(
+              top: 40,
+              right: 20,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final allItems = <Map<String, dynamic>>[];
@@ -98,35 +130,56 @@ class PaperFigureSection extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // 이미지
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  item.imageUrl,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.broken_image, size: 40, color: Colors.black45),
-                            SizedBox(height: 8),
-                            Text(
-                              "이미지를 불러올 수 없습니다",
-                              style: TextStyle(fontSize: 12, color: Colors.black45),
+              // 이미지 (터치하면 확대)
+              GestureDetector(
+                onTap: () => _showImageDialog(context, item.imageUrl, "$type $index"),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 200,
+                    ),
+                    child: Image.network(
+                      item.imageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.broken_image, size: 40, color: Colors.black45),
+                                SizedBox(height: 8),
+                                Text(
+                                  "이미지를 불러올 수 없습니다",
+                                  style: TextStyle(fontSize: 12, color: Colors.black45),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              // 확대 아이콘 힌트
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.zoom_in, size: 16, color: Colors.black45),
+                  SizedBox(width: 4),
+                  Text(
+                    "터치하여 확대",
+                    style: TextStyle(fontSize: 11, color: Colors.black45),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
 

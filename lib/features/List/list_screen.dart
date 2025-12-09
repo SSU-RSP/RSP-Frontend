@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import '../../models/paper_item.dart';
 import '../../widgets/paper_card.dart';
 import '../Home/paper_detail_screen.dart';
+import '../../data/dummy_data.dart';
 
 class ListScreen extends StatelessWidget {
   const ListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // 더미 데이터
+    // 더미 데이터 (PromptBERT 포함)
     final List<PaperItem> papers = [
+      getPromptBertPaper(), // 핵심 더미 데이터
       PaperItem(
         title: "Attention Is All You Need",
         authors: "Ashish Vaswani, Jakob Uszkoreit, ...",

@@ -18,7 +18,7 @@ class PaperDetailScreen extends StatelessWidget {
           // 상단 AppBar + 오디오 플레이어
           SliverAppBar(
             pinned: true,
-            expandedHeight: 400,
+            expandedHeight: 420,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: const BoxDecoration(
