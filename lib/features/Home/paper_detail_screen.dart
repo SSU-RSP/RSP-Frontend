@@ -18,7 +18,7 @@ class PaperDetailScreen extends StatelessWidget {
           // 상단 AppBar + 오디오 플레이어
           SliverAppBar(
             pinned: true,
-            expandedHeight: 400,
+            expandedHeight: 420,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: const BoxDecoration(
@@ -58,7 +58,11 @@ class PaperDetailScreen extends StatelessWidget {
                   _buildSectionCard(
                     context,
                     title: "수식·그림·표 해석",
-                    child: const PaperFigureSection(),
+                    child: PaperFigureSection(
+                      equations: paper.equations,
+                      tables: paper.tables,
+                      figures: paper.figures,
+                    ),
                   ),
                 ],
               ),

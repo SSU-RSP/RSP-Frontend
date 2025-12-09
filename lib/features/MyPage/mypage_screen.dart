@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Login/login_screen.dart';
 
 class MyPageScreen extends StatelessWidget {
   final String userName;
@@ -83,7 +84,37 @@ class MyPageScreen extends StatelessWidget {
                       height: 48,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // TODO: 로그아웃 로직 연결
+                          // 로그아웃 확인 다이얼로그
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text("로그아웃"),
+                              content: const Text("로그아웃 하시겠습니까?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("취소"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // 다이얼로그 닫기
+                                    Navigator.pop(context);
+                                    // 모든 화면 제거하고 로그인 화면으로 이동
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (_) => const LoginScreen(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  },
+                                  child: const Text(
+                                    "로그아웃",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         icon: const Icon(Icons.logout, size: 18, color: Colors.white),
                         label: const Text("로그아웃하기", style: TextStyle(

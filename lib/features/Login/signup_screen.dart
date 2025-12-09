@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rsp_frontend/main_screen.dart';
+import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -52,10 +52,10 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     // TODO: API 연동 필요
-    // 현재는 성공 메시지 후 메인 화면으로 이동
+    // 현재는 성공 메시지 후 로그인 화면으로 이동
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("회원가입이 완료되었습니다!"),
+        content: Text("회원가입이 완료되었습니다! 로그인해주세요."),
         backgroundColor: Color(0xFF6593FF),
       ),
     );
@@ -64,7 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const MainScreen(),
+              const LoginScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,

@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const ListScreen(),
     const HomePage(key: PageStorageKey("home")),
-    const MyPageScreen(userName: "게스트", key: PageStorageKey("mypage")),
+    const MyPageScreen(userName: "seohyeon", key: PageStorageKey("mypage")),
   ];
 
   void _onItemTapped(int index) {
