@@ -197,6 +197,7 @@ class _HomePageState extends State<HomePage> {
                   _buildKeywordChip("딥러닝"),
                   _buildKeywordChip("LLM"),
                   _buildKeywordChip("PromptBERT"),
+
                 ],
               ),
 

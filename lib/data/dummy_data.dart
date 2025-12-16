@@ -88,5 +88,3 @@ PaperItem getPromptBertPaper() {
 민수: 오늘 <AI Paper Dive>는 여기까지입니다. 유익하셨다면 구독과 좋아요 부탁드리고요!""",
   );
 }
-
-// 검색 더미 데이터는 제거됨 - API 연동으로 대체
