@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'search_result_screen.dart';
 import '../../models/paper_item.dart';
-import '../../data/dummy_data.dart';
+import '../../services/paper_api_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,8 +15,9 @@ class _HomePageState extends State<HomePage> {
   final FocusNode _focusNode = FocusNode();
 
   /// 검색 실행 함수
-  void _executeSearch() {
-    final query = _searchController.text.trim();
+  Future<void> _executeSearch() async {
+    // 띄어쓰기 제거하고 검색
+    final query = _searchController.text.trim().replaceAll(' ', '');
 
     if (query.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -25,19 +26,48 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // ✅ 더미 데이터 (getSearchResults 함수 사용)
-    final results = getSearchResults(query);
-
-    // 검색 결과 화면으로 이동
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SearchResultScreen(
-          query: query,
-          results: results,
-        ),
+    // 로딩 다이얼로그 표시
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
       ),
     );
+
+    try {
+      // API 호출
+      final results = await PaperApiService.searchPapers(query);
+
+      // 로딩 다이얼로그 닫기
+      if (mounted) Navigator.pop(context);
+
+      // 검색 결과 화면으로 이동
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SearchResultScreen(
+              query: query,
+              results: results,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // 로딩 다이얼로그 닫기
+      if (mounted) Navigator.pop(context);
+
+      // 에러 메시지 표시
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('검색 실패: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   // 인기 검색어 Chip 위젯
@@ -45,7 +75,8 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _searchController.text = keyword;
+          // 띄어쓰기 제거된 키워드로 설정
+          _searchController.text = keyword.replaceAll(' ', '');
         });
         FocusScope.of(context).requestFocus(_focusNode);
       },
@@ -159,13 +190,13 @@ class _HomePageState extends State<HomePage> {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  _buildKeywordChip("PromptBERT"),
                   _buildKeywordChip("Transformer"),
                   _buildKeywordChip("BERT"),
                   _buildKeywordChip("GPT"),
                   _buildKeywordChip("Vision"),
-                  _buildKeywordChip("Deep Learning"),
+                  _buildKeywordChip("딥러닝"),
                   _buildKeywordChip("LLM"),
+                  _buildKeywordChip("PromptBERT"),
                 ],
               ),
 
