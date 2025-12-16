@@ -88,37 +88,3 @@ PaperItem getPromptBertPaper() {
 민수: 오늘 <AI Paper Dive>는 여기까지입니다. 유익하셨다면 구독과 좋아요 부탁드리고요!""",
   );
 }
-
-/// 검색 결과 더미 데이터
-List<PaperItem> getSearchResults(String query) {
-  // PromptBERT 또는 BERT 검색 시 실제 논문 반환
-  if (query.toLowerCase().contains('promptbert') || 
-      query.toLowerCase().contains('bert')) {
-    return [getPromptBertPaper()];
-  }
-  
-  // 그 외 키워드는 기존 더미 데이터
-  return [
-    PaperItem(
-      title: "$query 관련 최신 연구",
-      authors: "Research Team A et al.",
-      conference: "ICML",
-      year: 2024,
-      summary: "$query 에 대한 최신 연구를 다룹니다. 기존 한계를 극복하고 성능을 향상시켰습니다.",
-    ),
-    PaperItem(
-      title: "$query 기반 새로운 아키텍처 설계",
-      authors: "Research Team B et al.",
-      conference: "NeurIPS",
-      year: 2023,
-      summary: "$query 를 활용한 아키텍처 최적화 연구입니다. 실험 결과 기존 대비 성능이 향상되었습니다.",
-    ),
-    PaperItem(
-      title: "$query 의 실제 응용 사례",
-      authors: "Industry Team C et al.",
-      conference: "ICLR",
-      year: 2024,
-      summary: "$query 기술의 실제 산업 적용 사례를 분석한 연구입니다.",
-    ),
-  ];
-}
