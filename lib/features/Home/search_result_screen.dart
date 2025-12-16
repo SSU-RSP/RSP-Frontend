@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/paper_item.dart';
 import '../../widgets/paper_card.dart';
+import '../../widgets/summary_loading_widget.dart';
 import '../../services/paper_api_service.dart';
 import 'paper_detail_screen.dart';
 
@@ -26,18 +27,20 @@ class SearchResultScreen extends StatelessWidget {
       return;
     }
 
-    // 로딩 다이얼로그 표시
+    // 로딩 다이얼로그 표시 (요약 대기용 - gif.png 사용)
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: const SummaryLoadingWidget(),
       ),
     );
 
     try {
-      // 상세 정보 API 호출
-      final detailedPaper = await PaperApiService.getPaperDetail(paper.arxivId!);
+      // 상세 정보 API 호출 (검색 결과 전체 객체 전달)
+      final detailedPaper = await PaperApiService.getPaperDetail(paper);
 
       // 로딩 다이얼로그 닫기
       if (context.mounted) Navigator.pop(context);
@@ -92,7 +95,7 @@ class SearchResultScreen extends StatelessWidget {
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0), // 하단 padding 제거
               itemCount: results.length,
               itemBuilder: (context, index) {
                 final paper = results[index];

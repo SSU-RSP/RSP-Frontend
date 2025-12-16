@@ -15,6 +15,27 @@ class _PaperSummarySectionState extends State<PaperSummarySection> {
 
   @override
   Widget build(BuildContext context) {
+    // 요약이 비어있거나 에러인 경우
+    if (widget.summary.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8F9FB),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(
+          child: Text(
+            "에러로 인해 요약을 불러오지 못했습니다.",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black54,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),

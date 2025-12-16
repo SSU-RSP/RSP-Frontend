@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // 로딩 다이얼로그 표시
+    // 로딩 다이얼로그 표시 (검색용 - 기존 방식)
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                   _buildKeywordChip("BERT"),
                   _buildKeywordChip("GPT"),
                   _buildKeywordChip("Vision"),
-                  _buildKeywordChip("딥러닝"),
+                  _buildKeywordChip("DeepLearning"),
                   _buildKeywordChip("LLM"),
                   _buildKeywordChip("PromptBERT"),
 
