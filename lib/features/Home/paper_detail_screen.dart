@@ -51,7 +51,9 @@ class PaperDetailScreen extends StatelessWidget {
                   _buildSectionCard(
                     context,
                     title: "목차",
-                    child: const PaperTocSection(),
+                    child: PaperTocSection(
+                      storytelling: paper.storytelling,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
